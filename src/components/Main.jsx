@@ -11,6 +11,10 @@ function Main(props) {
     const [blogPosts, setBlogPosts] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [pageSize, setPageSize] = useState(10);
+    const [pageNumberLimit, setPageNumberLimit] = useState(5);
+    const [maxPageNumberLimit, setmaxPageNumberLimit] = useState(5);
+    const [minPageNumberLimit, setminPageNumberLimit] = useState(0);
+    
 
     useEffect(() => {
                async function getBlogs(){
@@ -25,6 +29,23 @@ function Main(props) {
          setCurrentPage(page);
      }
     const finalPosts = paginate(blogPosts, currentPage, pageSize)
+
+    const handleNextbtn = () => {
+        setCurrentPage(currentPage + 1);
+        if (currentPage + 1 > maxPageNumberLimit) {
+          setmaxPageNumberLimit(maxPageNumberLimit + pageNumberLimit);
+          setminPageNumberLimit(minPageNumberLimit + pageNumberLimit);
+        }
+      };
+    
+      const handlePrevbtn = () => {
+        setCurrentPage(currentPage - 1);
+    
+        if ((currentPage - 1) % pageNumberLimit == 0) {
+          setmaxPageNumberLimit(maxPageNumberLimit - pageNumberLimit);
+          setminPageNumberLimit(minPageNumberLimit - pageNumberLimit);
+        }
+      };
 
     
 return (
@@ -44,7 +65,13 @@ return (
             itemsCount={blogPosts.length} 
              pageSize= {pageSize} 
              currentPage = {currentPage}
-             onPageChange = {handlePageChange} ></Pagination>
+             onPageChange = {handlePageChange}
+             MaxPage = {maxPageNumberLimit}
+             MinPage = {minPageNumberLimit}
+             handlePrevbtn = {handlePrevbtn}
+             handleNextbtn = {handleNextbtn}
+             ></Pagination>
+            
            
         </div> 
       );
